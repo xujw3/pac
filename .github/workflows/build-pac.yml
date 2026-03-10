@@ -1,0 +1,40 @@
+name: Auto Generate PAC from GFWList
+
+on:
+  schedule:
+    # 每天 UTC 时间 00:00 (北京时间早上8点) 自动执行一次
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许你在 GitHub Actions 页面手动点击按钮触发运行
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 使用默认的 GITHUB_TOKEN 进行认证
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run generation script
+        run: python generate_pac.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add pac.txt
+          
+          # 检查是否有内容变更，如果没有则不提交以避免污染 Commit 记录
+          if git diff-index --quiet HEAD --; then
+            echo "pac.txt 没有任何更新，跳过提交。"
+          else
+            git commit -m "Auto-update pac.txt from latest gfwlist"
+            git push
+          fi
