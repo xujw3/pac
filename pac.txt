@@ -122,6 +122,7 @@ var rules = [
             "a-normal-day.com",
             "a248.e.akamai.net",
             "aamacau.com",
+            "aave.com",
             "abc.net.au",
             "abc.xyz",
             "abebooks.co.uk",
