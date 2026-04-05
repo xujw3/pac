@@ -6,7 +6,6 @@ var rules = [
     ],
     [
         [
-            ".ipify.org",
             "adservice.google.com",
             "c.pki.goog",
             "cdn-china.ampproject.org",
